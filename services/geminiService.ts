@@ -7,19 +7,26 @@ const ai = new GoogleGenAI({ apiKey: apiKey });
 
 export const generateHairstyle = async (
   base64Image: string,
-  style: HairstyleType
+  style: string
 ): Promise<string> => {
   try {
     // Clean base64 string if it has the prefix
     const cleanBase64 = base64Image.replace(/^data:image\/(png|jpeg|jpg|webp);base64,/, '');
 
     const prompt = `
-      Crie um retrato fotorrealista baseado nesta imagem de entrada.
-      Transforme o penteado da pessoa para um: ${style}.
-      O sujeito é uma mulher com mais de 50 anos.
-      Garanta que o cabelo pareça saudável, volumoso e adequado à idade, mas moderno e elegante.
-      Mantenha os traços faciais e a expressão da pessoa o máximo possível.
-      Alta qualidade, fotografia profissional de salão, iluminação suave.
+      Atue como um cabeleireiro profissional e especialista em visagismo.
+      Tarefa: Edite a foto fornecida para alterar o cabelo da pessoa.
+      
+      Novo Estilo Desejado: ${style}.
+      
+      Público Alvo: O sujeito é uma mulher madura (50+).
+      
+      Diretrizes:
+      1. Se o "Novo Estilo Desejado" for uma descrição (ex: "curto com franja"), interprete e aplique artisticamente.
+      2. Se for um nome de corte (ex: "Pixie"), aplique o corte clássico.
+      3. O cabelo deve parecer saudável, com volume adequado e realista.
+      4. MANTENHA o rosto, a expressão facial, a iluminação e as roupas da pessoa originais intactos. Apenas o cabelo deve mudar.
+      5. Resultado deve ser fotorrealista de alta qualidade.
     `;
 
     const response = await ai.models.generateContent({

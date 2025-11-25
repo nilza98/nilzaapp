@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload, RefreshCw, Wand2, Download, AlertCircle, ChevronRight, ArrowRight } from 'lucide-react';
+import { Upload, RefreshCw, Wand2, Download, AlertCircle, ChevronRight, ArrowRight, Edit3 } from 'lucide-react';
 import { generateHairstyle } from '../services/geminiService';
 import { GeneratedImage, HairstyleType } from '../types';
 
@@ -8,7 +8,12 @@ export const VirtualStylist: React.FC = () => {
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedStyle, setSelectedStyle] = useState<HairstyleType>(HairstyleType.PIXIE);
+  
+  // State for style selection
+  const [selectedStyle, setSelectedStyle] = useState<string>(HairstyleType.PIXIE);
+  const [isCustomMode, setIsCustomMode] = useState(false);
+  const [customPrompt, setCustomPrompt] = useState('');
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,19 +35,41 @@ export const VirtualStylist: React.FC = () => {
     }
   };
 
+  const handleStyleSelect = (style: string) => {
+    setIsCustomMode(false);
+    setSelectedStyle(style);
+    setError(null);
+  };
+
+  const handleCustomModeSelect = () => {
+    setIsCustomMode(true);
+    setSelectedStyle('custom'); // Just a flag
+    setError(null);
+  };
+
   const handleGenerate = async () => {
     if (!selectedImage) return;
+
+    // Determine final prompt
+    let styleToGenerate = selectedStyle;
+    if (isCustomMode) {
+        if (!customPrompt.trim()) {
+            setError("Por favor, descreva o estilo que você deseja.");
+            return;
+        }
+        styleToGenerate = customPrompt;
+    }
 
     setLoading(true);
     setError(null);
 
     try {
-      const generatedUrl = await generateHairstyle(selectedImage, selectedStyle);
+      const generatedUrl = await generateHairstyle(selectedImage, styleToGenerate);
       
       const newImage: GeneratedImage = {
         id: Date.now().toString(),
         url: generatedUrl,
-        styleName: selectedStyle,
+        styleName: isCustomMode ? "Estilo Personalizado" : selectedStyle,
       };
 
       // Add new image to the BEGINNING of the array so it appears first on the left
@@ -62,7 +89,7 @@ export const VirtualStylist: React.FC = () => {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-4">Sua Estilista Virtual</h2>
           <p className="text-pink-200/80 text-lg max-w-2xl mx-auto">
-            Em dúvida sobre um novo visual? Envie uma foto e deixe nossa IA sugerir estilos sob medida para seus traços.
+            Em dúvida sobre um novo visual? Envie uma foto e escolha um estilo ou descreva exatamente como você imagina.
           </p>
         </div>
 
@@ -97,21 +124,49 @@ export const VirtualStylist: React.FC = () => {
               />
             </div>
 
-            <h3 className="text-xl font-serif text-pink-100 mb-4">2. Escolha um Estilo</h3>
+            <h3 className="text-xl font-serif text-pink-100 mb-4">2. Escolha ou Descreva</h3>
             <div className="flex flex-col gap-2 mb-6">
               {Object.values(HairstyleType).map((style) => (
                 <button
                   key={style}
-                  onClick={() => setSelectedStyle(style)}
+                  onClick={() => handleStyleSelect(style)}
                   className={`px-4 py-3 rounded-lg text-left text-sm font-medium transition-all flex justify-between items-center
-                    ${selectedStyle === style 
+                    ${!isCustomMode && selectedStyle === style 
                       ? 'bg-brand-accent text-white shadow-lg shadow-pink-900/50' 
                       : 'bg-brand-base text-gray-300 hover:bg-brand-light'}`}
                 >
                   {style}
-                  {selectedStyle === style && <ChevronRight className="h-4 w-4" />}
+                  {!isCustomMode && selectedStyle === style && <ChevronRight className="h-4 w-4" />}
                 </button>
               ))}
+              
+              {/* Botão para modo personalizado */}
+              <button
+                onClick={handleCustomModeSelect}
+                className={`px-4 py-3 rounded-lg text-left text-sm font-medium transition-all flex justify-between items-center
+                    ${isCustomMode 
+                      ? 'bg-brand-accent text-white shadow-lg shadow-pink-900/50' 
+                      : 'bg-brand-base text-gray-300 hover:bg-brand-light border border-pink-500/30'}`}
+              >
+                 <span className="flex items-center gap-2">
+                    <Edit3 className="h-4 w-4" />
+                    Outro / Descrever meu estilo
+                 </span>
+                 {isCustomMode && <ChevronRight className="h-4 w-4" />}
+              </button>
+
+              {/* Campo de texto para descrição personalizada */}
+              {isCustomMode && (
+                <div className="mt-2 animate-fade-in">
+                    <label className="block text-xs text-pink-300 mb-1 ml-1">Descreva como você quer o cabelo:</label>
+                    <textarea
+                        value={customPrompt}
+                        onChange={(e) => setCustomPrompt(e.target.value)}
+                        placeholder="Ex: Curto na nuca, com franja longa lateral, cor castanho iluminado e bastante volume..."
+                        className="w-full bg-black/40 border border-brand-accent/50 rounded-lg p-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent resize-none h-24"
+                    />
+                </div>
+              )}
             </div>
 
             <button

@@ -30,11 +30,11 @@ export const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/90 via-brand-base/70 to-brand-dark"></div>
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto mt-10">
+      {/* Content - Removed mt-10 to center vertically better on mobile */}
+      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
         <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-accent/20 border border-pink-500/40 backdrop-blur-md mb-8 animate-fade-in hover:bg-brand-accent/30 transition-colors cursor-default">
            <Sparkles className="w-5 h-5 text-pink-300" />
-           <span className="text-pink-100 text-sm md:text-base font-semibold uppercase tracking-widest">Atendimento Vip a Domicílio</span>
+           <span className="text-pink-100 text-sm md:text-base font-semibold uppercase tracking-widest">Atendimento Vip</span>
         </div>
 
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-white mb-8 animate-fade-in-up leading-tight drop-shadow-2xl">
@@ -47,7 +47,7 @@ export const Hero: React.FC = () => {
           Levamos o salão completo até o conforto do seu lar, com elegância e segurança.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pb-4 md:pb-0">
           <a
             href="#stylist"
             onClick={(e) => scrollToSection(e, 'stylist')}
@@ -66,7 +66,8 @@ export const Hero: React.FC = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-brand-accent opacity-80 hover:opacity-100 transition-opacity cursor-pointer">
+      {/* Arrow moved lower (bottom-4) on mobile to avoid overlap */}
+      <div className="absolute bottom-4 md:bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-brand-accent opacity-80 hover:opacity-100 transition-opacity cursor-pointer z-20">
         <a href="#about" onClick={(e) => scrollToSection(e, 'about')}><ArrowDown className="h-10 w-10" /></a>
       </div>
     </div>

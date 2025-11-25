@@ -1,5 +1,52 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Heart, Phone, MapPin, MessageCircle, Home, Clock, Scissors } from 'lucide-react';
+
+// Componente auxiliar para animação 3D
+const Card3D: React.FC<{ children: React.ReactNode; delay?: number; className?: string }> = ({ 
+  children, 
+  delay = 0,
+  className = ""
+}) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const domRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          // Opcional: desconectar após animar uma vez para performance
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 }); // Dispara quando 10% do elemento está visível
+
+    const currentElement = domRef.current;
+    if (currentElement) {
+      observer.observe(currentElement);
+    }
+
+    return () => {
+      if (currentElement) observer.unobserve(currentElement);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={domRef}
+      className={`transform transition-all duration-1000 ease-out will-change-transform ${className}`}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible 
+          ? 'perspective(1000px) rotateX(0deg) translateY(0) scale(1)' 
+          : 'perspective(1000px) rotateX(45deg) translateY(50px) scale(0.9)',
+        transitionDelay: `${delay}ms`
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 
 export const AboutSection: React.FC = () => {
   return (
@@ -28,36 +75,35 @@ export const AboutSection: React.FC = () => {
           
           <div className="space-y-6 text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto">
             <p>
-              Olá! Sou a Nilza. Com anos de experiência dedicados à beleza feminina, decidi revolucionar a forma como cuido de minhas clientes.
-              Entendo que seu tempo é precioso e seu conforto é inegociável.
-            </p>
-            <p>
-              Por isso, <strong>eu vou até você</strong>. Esqueça o trânsito, a espera em recepções ou o barulho de salões lotados.
-              Meu atendimento é exclusivo, personalizado e realizado no ambiente onde você se sente mais à vontade: sua casa.
-            </p>
-            <p>
-               Especialista em texturas, cortes modernos e coloração para mulheres maduras, levo todos os equipamentos profissionais necessários
-               para garantir um resultado de salão, com a exclusividade de um atendimento particular.
+              Olá, sou a Nilza! Valorizo seu tempo precioso e seu conforto, por isso levo o salão completo até você. Esqueça o trânsito e a espera: meu atendimento VIP a domicílio é focado em realçar sua beleza com cortes modernos que rejuvenescem e trazem leveza. Transforme seu visual e sinta-se ainda mais linda e jovem, tudo isso na segurança e tranquilidade do seu lar.
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-          <div className="bg-brand-dark/30 p-6 rounded-xl border border-pink-900/20 text-center hover:bg-brand-dark/50 transition-colors">
-             <Home className="text-brand-accent h-8 w-8 mx-auto mb-4" />
-             <h3 className="text-white font-bold mb-2">No Seu Conforto</h3>
-             <p className="text-gray-400 text-sm">Atendimento completo na segurança do seu lar.</p>
-          </div>
-          <div className="bg-brand-dark/30 p-6 rounded-xl border border-pink-900/20 text-center hover:bg-brand-dark/50 transition-colors">
-             <Scissors className="text-brand-accent h-8 w-8 mx-auto mb-4" />
-             <h3 className="text-white font-bold mb-2">Material Profissional</h3>
-             <p className="text-gray-400 text-sm">Levo lavatório portátil, toalhas e produtos premium.</p>
-          </div>
-          <div className="bg-brand-dark/30 p-6 rounded-xl border border-pink-900/20 text-center hover:bg-brand-dark/50 transition-colors">
-             <Clock className="text-brand-accent h-8 w-8 mx-auto mb-4" />
-             <h3 className="text-white font-bold mb-2">Horário Flexível</h3>
-             <p className="text-gray-400 text-sm">Agenda adaptada à sua rotina e conveniência.</p>
-          </div>
+          <Card3D delay={0}>
+            <div className="bg-brand-dark/30 p-6 rounded-xl border border-pink-900/20 text-center hover:bg-brand-dark/50 transition-colors h-full shadow-lg hover:shadow-brand-accent/10">
+               <Home className="text-brand-accent h-8 w-8 mx-auto mb-4" />
+               <h3 className="text-white font-bold mb-2">No Seu Conforto</h3>
+               <p className="text-gray-400 text-sm">Atendimento completo na segurança do seu lar.</p>
+            </div>
+          </Card3D>
+          
+          <Card3D delay={200}>
+            <div className="bg-brand-dark/30 p-6 rounded-xl border border-pink-900/20 text-center hover:bg-brand-dark/50 transition-colors h-full shadow-lg hover:shadow-brand-accent/10">
+               <Scissors className="text-brand-accent h-8 w-8 mx-auto mb-4" />
+               <h3 className="text-white font-bold mb-2">Material Profissional</h3>
+               <p className="text-gray-400 text-sm">Levo lavatório portátil, toalhas e produtos premium.</p>
+            </div>
+          </Card3D>
+          
+          <Card3D delay={400}>
+            <div className="bg-brand-dark/30 p-6 rounded-xl border border-pink-900/20 text-center hover:bg-brand-dark/50 transition-colors h-full shadow-lg hover:shadow-brand-accent/10">
+               <Clock className="text-brand-accent h-8 w-8 mx-auto mb-4" />
+               <h3 className="text-white font-bold mb-2">Horário Flexível</h3>
+               <p className="text-gray-400 text-sm">Agenda adaptada à sua rotina e conveniência.</p>
+            </div>
+          </Card3D>
         </div>
       </div>
     </section>
@@ -98,58 +144,70 @@ export const ContactSection: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card 1: Contact Info */}
-          <div className="glass-panel p-8 rounded-xl text-center hover:transform hover:-translate-y-1 transition-all duration-300">
-            <div className="w-16 h-16 bg-brand-light rounded-full flex items-center justify-center mx-auto mb-6">
-              <Phone className="h-8 w-8 text-pink-300" />
+          <Card3D delay={0}>
+            <div className="glass-panel p-8 rounded-xl text-center hover:transform hover:-translate-y-2 transition-all duration-300 h-full flex flex-col items-center justify-between">
+              <div>
+                <div className="w-16 h-16 bg-brand-light rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Phone className="h-8 w-8 text-pink-300" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Fale Comigo</h3>
+                <p className="text-gray-300 mb-4 text-lg">(48) 99955-3603</p>
+              </div>
+              <div className="mt-6">
+                <a 
+                  href="https://wa.me/5548999553603"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block bg-transparent border border-pink-500 text-pink-400 hover:bg-pink-500 hover:text-white px-6 py-2 rounded-full transition-colors text-sm font-bold uppercase tracking-wide"
+                >
+                  Ligar Agora
+                </a>
+              </div>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Fale Comigo</h3>
-            <p className="text-gray-300 mb-4 text-lg">(48) 99955-3603</p>
-            <div className="mt-6">
-              <a 
-                href="https://wa.me/5548999553603"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-transparent border border-pink-500 text-pink-400 hover:bg-pink-500 hover:text-white px-6 py-2 rounded-full transition-colors text-sm font-bold uppercase tracking-wide"
-              >
-                Ligar Agora
-              </a>
-            </div>
-          </div>
+          </Card3D>
 
           {/* Card 2: Location Service Area */}
-          <div className="glass-panel p-8 rounded-xl text-center hover:transform hover:-translate-y-1 transition-all duration-300">
-            <div className="w-16 h-16 bg-brand-light rounded-full flex items-center justify-center mx-auto mb-6">
-              <MapPin className="h-8 w-8 text-pink-300" />
+          <Card3D delay={200}>
+            <div className="glass-panel p-8 rounded-xl text-center hover:transform hover:-translate-y-2 transition-all duration-300 h-full flex flex-col items-center justify-between">
+              <div>
+                <div className="w-16 h-16 bg-brand-light rounded-full flex items-center justify-center mx-auto mb-6">
+                  <MapPin className="h-8 w-8 text-pink-300" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Área de Atendimento</h3>
+                <p className="text-gray-300 mb-1">Araranguá</p>
+                <p className="text-gray-300">e Maracajá</p>
+              </div>
+              <div className="mt-6">
+                <span className="inline-block px-4 py-2 bg-pink-900/30 rounded-lg text-pink-200 text-sm">
+                  Consulte taxa de deslocamento
+                </span>
+              </div>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Área de Atendimento</h3>
-            <p className="text-gray-300 mb-1">Araranguá</p>
-            <p className="text-gray-300">e Maracajá</p>
-            <div className="mt-6">
-              <span className="inline-block px-4 py-2 bg-pink-900/30 rounded-lg text-pink-200 text-sm">
-                Consulte taxa de deslocamento
-              </span>
-            </div>
-          </div>
+          </Card3D>
 
            {/* Card 3: WhatsApp */}
-           <div className="glass-panel p-8 rounded-xl text-center hover:transform hover:-translate-y-1 transition-all duration-300 border-green-900/50">
-            <div className="w-16 h-16 bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-700">
-              <MessageCircle className="h-8 w-8 text-green-400" />
+           <Card3D delay={400}>
+             <div className="glass-panel p-8 rounded-xl text-center hover:transform hover:-translate-y-2 transition-all duration-300 border-green-900/50 h-full flex flex-col items-center justify-between">
+              <div>
+                <div className="w-16 h-16 bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-700">
+                  <MessageCircle className="h-8 w-8 text-green-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Agendamento Rápido</h3>
+                <p className="text-gray-300 mb-4">Combine o melhor horário pelo WhatsApp.</p>
+              </div>
+              <div className="mt-2">
+                <a 
+                  href="https://wa.me/5548999553603"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-full transition-colors font-bold shadow-lg shadow-green-900/50"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  Chamar no Zap
+                </a>
+              </div>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Agendamento Rápido</h3>
-            <p className="text-gray-300 mb-4">Combine o melhor horário pelo WhatsApp.</p>
-            <div className="mt-2">
-              <a 
-                href="https://wa.me/5548999553603"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-full transition-colors font-bold shadow-lg shadow-green-900/50"
-              >
-                <MessageCircle className="h-5 w-5" />
-                Chamar no Zap
-              </a>
-            </div>
-          </div>
+          </Card3D>
         </div>
       </div>
     </section>
