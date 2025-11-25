@@ -1,7 +1,5 @@
 {
   "name": "Nilza Alves",
   "description": "Um salão de beleza premier para mulheres acima de 50 anos, com visualização de penteados por IA.",
-  "requestFramePermissions": [
-    "camera"
-  ]
+  "requestFramePermissions": []
 }

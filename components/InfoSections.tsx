@@ -12,10 +12,9 @@ export const AboutSection: React.FC = () => {
                 <div className="absolute -top-4 -left-4 w-full h-full border-2 border-brand-accent/50 rounded-2xl transition-all group-hover:-top-6 group-hover:-left-6"></div>
                 <div className="absolute -bottom-4 -right-4 w-full h-full bg-brand-light/30 rounded-2xl -z-10 transition-all group-hover:-bottom-6 group-hover:-right-6"></div>
                 <img 
-                  src="/nilza.jpg" 
+                  src="https://i.im.ge/2025/11/25/4UrZtr.WhatsApp-Image-2025-11-23-at-11-29-58.jpeg" 
                   onError={(e) => {
                     e.currentTarget.src = "https://images.unsplash.com/photo-1584687353967-59637dd5192b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
-                    e.currentTarget.parentElement?.setAttribute('title', 'Salve sua foto como nilza.jpg na pasta public');
                   }}
                   alt="Nilza Alves" 
                   className="w-full h-full object-cover rounded-2xl shadow-2xl border-2 border-pink-500/20"
@@ -104,12 +103,16 @@ export const ContactSection: React.FC = () => {
               <Phone className="h-8 w-8 text-pink-300" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Fale Comigo</h3>
-            <p className="text-gray-300 mb-1">+55 (11) 91234-5678</p>
-            <p className="text-gray-300">contato@nilzaalves.com.br</p>
+            <p className="text-gray-300 mb-4 text-lg">(48) 99955-3603</p>
             <div className="mt-6">
-              <button className="bg-transparent border border-pink-500 text-pink-400 hover:bg-pink-500 hover:text-white px-6 py-2 rounded-full transition-colors text-sm font-bold uppercase tracking-wide">
+              <a 
+                href="https://wa.me/5548999553603"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block bg-transparent border border-pink-500 text-pink-400 hover:bg-pink-500 hover:text-white px-6 py-2 rounded-full transition-colors text-sm font-bold uppercase tracking-wide"
+              >
                 Ligar Agora
-              </button>
+              </a>
             </div>
           </div>
 
@@ -119,8 +122,8 @@ export const ContactSection: React.FC = () => {
               <MapPin className="h-8 w-8 text-pink-300" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Área de Atendimento</h3>
-            <p className="text-gray-300 mb-1">São Paulo Capital</p>
-            <p className="text-gray-300">e Grande ABC</p>
+            <p className="text-gray-300 mb-1">Araranguá</p>
+            <p className="text-gray-300">e Maracajá</p>
             <div className="mt-6">
               <span className="inline-block px-4 py-2 bg-pink-900/30 rounded-lg text-pink-200 text-sm">
                 Consulte taxa de deslocamento
@@ -137,7 +140,9 @@ export const ContactSection: React.FC = () => {
             <p className="text-gray-300 mb-4">Combine o melhor horário pelo WhatsApp.</p>
             <div className="mt-2">
               <a 
-                href="https://wa.me/1234567890"
+                href="https://wa.me/5548999553603"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-full transition-colors font-bold shadow-lg shadow-green-900/50"
               >
                 <MessageCircle className="h-5 w-5" />
